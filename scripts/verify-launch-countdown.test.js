@@ -10,7 +10,7 @@ const target = Date.UTC(2026, 10, 8, 7, 0, 0);
 test("launch defaults to 8 AM Lagos, the same absolute instant as 7 AM UTC", () => {
   assert.equal(getLaunchConfig().targetMs, target);
   assert.equal(getLaunchConfig().launchAt, "2026-11-08T08:00:00+01:00");
-  assert.equal(getLaunchConfig().label, "Sunday, 8 November 2026 · 8:00 AM (Lagos time)");
+  assert.equal(getLaunchConfig().label, "Sunday, 8 November 2026 · 8:00 AM (West African Time)");
 });
 
 test("launch config safely falls back for invalid, missing, impossible and timezone-less values", () => {
@@ -19,11 +19,11 @@ test("launch config safely falls back for invalid, missing, impossible and timez
   }
 });
 
-test("launch config accepts absolute overrides and describes them in Lagos time", () => {
+test("launch config accepts absolute overrides and describes them in West African Time", () => {
   for (const value of ["2027-01-02T11:30:00Z", "2027-01-02T12:30:00+01:00", "2027-01-02T06:30:00-05:00", " 2027-01-02T11:30:00.000Z "]) {
     const config = getLaunchConfig({ VITE_LAUNCH_AT: value });
     assert.equal(config.targetMs, Date.UTC(2027, 0, 2, 11, 30));
-    assert.equal(config.label, "Saturday, 2 January 2027 · 12:30 PM (Lagos time)");
+    assert.equal(config.label, "Saturday, 2 January 2027 · 12:30 PM (West African Time)");
   }
   assert.equal(getLaunchConfig({ VITE_LAUNCH_AT: "2028-02-29T08:00+01:00" }).targetMs, Date.UTC(2028, 1, 29, 7));
 });

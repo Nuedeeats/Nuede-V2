@@ -17,7 +17,7 @@ export function LaunchCountdown() {
     <Container className="launch-countdown-layout">
       <div>
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-700">A date for your diary</p>
-        <h2 id={headingId} className="launch-countdown-heading mt-3 font-display text-2xl font-semibold text-brand-950 sm:text-3xl">{complete ? "Welcome to Nuede" : "Nuede officially launches in"}</h2>
+        <h2 id={headingId} className="launch-countdown-heading mt-3 font-display text-2xl font-semibold text-brand-950 sm:text-3xl">{complete ? "Welcome to Nuede" : "Nuede website officially launches in"}</h2>
         <p className="mt-3 text-sm leading-6 text-muted">{launchConfig.label}</p>
         <p className="sr-only">{summary}</p>
       </div>

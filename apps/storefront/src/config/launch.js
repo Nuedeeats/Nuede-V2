@@ -16,7 +16,7 @@ export function getLaunchConfig(env = {}) {
   const targetMs = Date.parse(launchAt);
   const date = new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Lagos", weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(targetMs);
   const time = new Intl.DateTimeFormat("en-US", { timeZone: "Africa/Lagos", hour: "numeric", minute: "2-digit", hour12: true }).format(targetMs);
-  return { launchAt, targetMs, label: `${date} · ${time} (Lagos time)` };
+  return { launchAt, targetMs, label: `${date} · ${time} (West African Time)` };
 }
 
 export const launchConfig = getLaunchConfig(import.meta.env);
