@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { feedbackSchema, feedbackSubjects, feedbackToTestimonialDraft, ratingSchema, testimonialSchema } from "../packages/validation/src/content.js";
-import { faqs, getContactContent, nutritionDisclaimer } from "../apps/storefront/src/features/content/config/storefrontContent.js";
+import { faqs, getContactContent, normalizeWhatsappNumber, nutritionDisclaimer } from "../apps/storefront/src/features/content/config/storefrontContent.js";
 import { buildProductConfiguration } from "../apps/storefront/src/features/product-detail/utils/customizationModel.js";
 import { normalizeMenuProduct } from "../apps/storefront/src/features/menu/utils/menuModel.js";
 
@@ -46,6 +46,27 @@ test("Cycle 17 optional contacts fail gracefully and never create unsafe links",
   assert.equal(contacts.links.length, 4);
   assert.ok(contacts.links.some((link) => link.href === "https://wa.me/2348000000000"));
   assert.equal(contacts.hours, "Configured hours");
+  assert.deepEqual(contacts.links.map((link) => link.kind), ["phone", "whatsapp", "email", "instagram"]);
+  assert.equal(contacts.links.find((link) => link.kind === "email").ariaLabel, "Email Nuede at test@example.com");
+  assert.equal(contacts.links.find((link) => link.kind === "email").external, undefined);
+  for (const kind of ["whatsapp", "instagram"]) assert.equal(contacts.links.find((link) => link.kind === kind).external, true);
+});
+
+test("storefront WhatsApp normalization corrects Nigerian trunk prefixes and accepts formatted numbers", () => {
+  for (const value of ["23408116291761", "2348116291761", "+234 811 629 1761", "08116291761", "+234 (0) 811-629-1761"]) {
+    assert.equal(normalizeWhatsappNumber(value), "2348116291761", value);
+    const contacts = getContactContent({ VITE_CONTACT_WHATSAPP: value });
+    assert.equal(contacts.links[0].href, "https://wa.me/2348116291761");
+    assert.equal(contacts.links[0].ariaLabel, "Chat with Nuede on WhatsApp");
+  }
+  assert.equal(normalizeWhatsappNumber("+44 20 7946 0958"), "442079460958");
+});
+
+test("storefront WhatsApp normalization rejects empty, malformed and invalid numbers without rendering a link", () => {
+  for (const value of [undefined, null, 2348116291761, "", "   ", "fake", "123", "00000000000", "234", "2340811", "234008116291761", "0811629176", "1234567890123456", "call2348116291761", "https://wa.me/2348116291761", "2348116291761<script>"]) {
+    assert.equal(normalizeWhatsappNumber(value), null, String(value));
+    assert.deepEqual(getContactContent({ VITE_CONTACT_WHATSAPP: value }).links, []);
+  }
 });
 test("Cycle 17 content covers documented FAQ subjects and nutrition variation", () => {
   assert.equal(faqs.length, 7);

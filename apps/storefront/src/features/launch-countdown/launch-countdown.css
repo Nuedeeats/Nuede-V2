@@ -1,0 +1,66 @@
+.launch-countdown {
+  scroll-margin-top: 6rem;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-brand-100);
+  padding-block: 2rem;
+}
+
+.launch-countdown-layout {
+  display: grid;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Keep the two-line mobile heading's space when the shorter welcome appears. */
+.launch-countdown-heading { min-height: 2lh; }
+
+.launch-countdown-display {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+  min-height: 13rem;
+}
+
+.launch-countdown-units {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.launch-countdown-unit {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  padding: 1rem 0.5rem;
+  text-align: center;
+}
+
+.launch-countdown-number {
+  color: var(--color-brand-950);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.launch-countdown-label { color: var(--color-muted); font-size: 0.75rem; }
+.launch-welcome { margin: 0; color: var(--color-brand-950); font-size: 1.5rem; font-weight: 600; }
+.launch-announcement { border-bottom: 1px solid var(--color-line); background: var(--color-brand-100); color: var(--color-brand-950); }
+.launch-announcement-link { padding-block: 0.75rem; font-size: 0.75rem; line-height: 1.75; text-underline-offset: 0.2em; }
+.launch-announcement-link:hover { text-decoration: underline; }
+.launch-announcement-dismiss { display: grid; place-items: center; min-width: 2.75rem; min-height: 2.75rem; border-radius: var(--radius-control); cursor: pointer; }
+.launch-announcement-dismiss:hover { background: var(--color-surface); }
+.launch-announcement :focus-visible { outline: 2px solid var(--color-brand-700); outline-offset: 3px; }
+
+@media (min-width: 480px) {
+  .launch-countdown-units { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .launch-countdown-display { min-height: 7rem; }
+}
+
+@media (min-width: 1024px) {
+  .launch-countdown-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+}

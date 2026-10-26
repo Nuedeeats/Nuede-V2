@@ -9,12 +9,14 @@ import { Hero } from "../features/content/components/Hero.jsx";
 import { Testimonials } from "../features/content/components/Testimonials.jsx";
 import { faqs, nutritionDisclaimer } from "../features/content/config/storefrontContent.js";
 import { useMenu } from "../features/menu/hooks/useMenu.js";
+import { LaunchCountdown } from "../features/launch-countdown/LaunchCountdown.jsx";
 
 /** Renders the storefront landing page from live menu and editorial sections. */
 export function HomePage() {
   const menu = useMenu();
   return <>
     <Hero products={menu.data} />
+    <LaunchCountdown />
     <section className="border-b border-line bg-surface py-8"><Container className="grid gap-6 sm:grid-cols-3">{[
       { icon: Utensils, title: "Prepared meals", text: "Explore our current kitchen menu" },
       { icon: SlidersHorizontal, title: "Make it yours", text: "Choose available options and add-ons" },

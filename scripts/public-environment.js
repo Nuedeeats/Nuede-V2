@@ -2,6 +2,7 @@ const publicNames = new Set([
   "VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY", "VITE_CONTACT_PHONE",
   "VITE_CONTACT_WHATSAPP", "VITE_CONTACT_EMAIL", "VITE_CONTACT_INSTAGRAM", "VITE_CONTACT_HOURS",
   "VITE_PUBLIC_SITE_URL", "VITE_GOOGLE_SITE_VERIFICATION",
+  "VITE_LAUNCH_AT",
 ]);
 const vercelPublicPrefix = "VITE_VERCEL_";
 const localCanonicalSiteUrl = "http://localhost:5175";

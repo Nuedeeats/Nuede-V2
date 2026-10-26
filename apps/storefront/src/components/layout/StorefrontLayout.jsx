@@ -4,6 +4,7 @@ import { CartProvider } from "../../features/cart/context/CartProvider.jsx";
 import { useMenuRealtime } from "../../features/menu/hooks/useMenuRealtime.js";
 import { SavedMealsProvider } from "../../features/saved-meals/context/SavedMealsProvider.jsx";
 import { StorefrontSeo } from "../../features/seo/components/StorefrontSeo.jsx";
+import { LaunchAnnouncement } from "../../features/launch-countdown/LaunchAnnouncement.jsx";
 import { ToastProvider } from "../ui/Toast.jsx";
 import { StorefrontFooter } from "./StorefrontFooter.jsx";
 import { StorefrontHeader } from "./StorefrontHeader.jsx";
@@ -20,6 +21,7 @@ export function StorefrontLayout() {
           <div className="min-h-screen bg-canvas">
             <StorefrontSeo />
             <StorefrontHeader />
+            <LaunchAnnouncement />
             <main id="main-content" tabIndex="-1"><Outlet /></main>
             <StorefrontFooter />
           </div>

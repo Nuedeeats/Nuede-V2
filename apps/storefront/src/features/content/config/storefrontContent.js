@@ -11,24 +11,35 @@ export const faqs = Object.freeze([
   { question: "How do WhatsApp orders work?", answer: "We'll save your order before opening WhatsApp with your order number and summary. Follow our team's payment instructions; continuing to WhatsApp does not mean the order is paid." },
 ]);
 
+/** Returns international WhatsApp digits, correcting Nigerian trunk prefixes; invalid values return null. */
+export function normalizeWhatsappNumber(value) {
+  if (typeof value !== "string" || !/^\+?[\d\s()-]+$/.test(value.trim())) return null;
+  let digits = value.replace(/\D/g, "");
+  if (digits.startsWith("2340")) digits = `234${digits.slice(4)}`;
+  else if (/^0[1-9]\d{9}$/.test(digits)) digits = `234${digits.slice(1)}`;
+  if (digits.startsWith("234")) return /^234[1-9]\d{9}$/.test(digits) ? digits : null;
+  return /^[1-9]\d{7,14}$/.test(digits) ? digits : null;
+}
+
 /**
- * Builds only valid, explicitly configured contact destinations for the footer.
+ * Builds only valid, explicitly configured contact destinations for storefront consumers.
  * Invalid optional settings are omitted rather than rendered as broken or unsafe links.
  */
 export function getContactContent(env = {}) {
+  /** Returns a trimmed optional config string, or an empty string when missing. */
   const clean = (key) => typeof env[key] === "string" ? env[key].trim() : "";
   const phone = clean("VITE_CONTACT_PHONE");
-  const whatsapp = clean("VITE_CONTACT_WHATSAPP").replace(/^\+/, "");
+  const whatsapp = normalizeWhatsappNumber(clean("VITE_CONTACT_WHATSAPP"));
   const email = clean("VITE_CONTACT_EMAIL");
   const instagram = clean("VITE_CONTACT_INSTAGRAM");
   const links = [];
-  if (/^\+?[1-9][0-9 ()-]{6,20}$/.test(phone)) links.push({ label: phone, ariaLabel: `Call Nuede on ${phone}`, href: `tel:${phone.replace(/[ ()-]/g, "")}` });
-  if (/^[1-9]\d{7,14}$/.test(whatsapp)) links.push({ label: "WhatsApp", ariaLabel: "Contact Nuede on WhatsApp", href: `https://wa.me/${whatsapp}`, external: true });
-  if (/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)) links.push({ label: email, ariaLabel: "Email Nuede", href: `mailto:${email}` });
+  if (/^\+?[1-9][0-9 ()-]{6,20}$/.test(phone)) links.push({ kind: "phone", label: phone, ariaLabel: `Call Nuede on ${phone}`, href: `tel:${phone.replace(/[ ()-]/g, "")}` });
+  if (whatsapp) links.push({ kind: "whatsapp", label: "WhatsApp", ariaLabel: "Chat with Nuede on WhatsApp", href: `https://wa.me/${whatsapp}`, external: true });
+  if (/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)) links.push({ kind: "email", label: email, ariaLabel: `Email Nuede at ${email}`, href: `mailto:${email}` });
   try {
     const url = new URL(instagram);
     if (url.protocol === "https:" && ["instagram.com", "www.instagram.com"].includes(url.hostname) && !url.username && !url.password && /^\/[a-zA-Z0-9._]+\/?$/.test(url.pathname)) {
-      links.push({ label: "Instagram", ariaLabel: "Visit Nuede on Instagram", href: url.href, external: true });
+      links.push({ kind: "instagram", label: "Instagram", ariaLabel: "Nuede on Instagram", href: url.href, external: true });
     }
   } catch { /* An unset or invalid optional destination is not rendered. */ }
   return { links, hours: clean("VITE_CONTACT_HOURS"), serviceArea: "Prepared meals delivered in Abuja. Available delivery areas and fees are shown at checkout." };
